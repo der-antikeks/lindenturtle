@@ -18,7 +18,15 @@ func equals(a, b []string) bool {
 	return true
 }
 
-func TestLindenmayer(t *testing.T) {
+func TestFunction(t *testing.T) {
+	testLindenmayer(t, lindenmayer)
+}
+
+func TestChannel(t *testing.T) {
+	testLindenmayer(t, coliner)
+}
+
+func testLindenmayer(t *testing.T, f func([]string, map[string][]string, int) []string) {
 	tests := []struct {
 		Rules      map[string][]string
 		Start      []string
@@ -60,8 +68,29 @@ func TestLindenmayer(t *testing.T) {
 	}
 
 	for _, c := range tests {
-		if r := lindenmayer(c.Start, c.Rules, c.Iterations); !equals(r, c.Expected) {
-			t.Errorf("lindenmayer(%v, %v, %v) != %v (got %v)", c.Start, c.Rules, c.Iterations, c.Expected, r)
+		if r := f(c.Start, c.Rules, c.Iterations); !equals(r, c.Expected) {
+			t.Errorf("f(%v, %v, %v) != %v (got %v)", c.Start, c.Rules, c.Iterations, c.Expected, r)
 		}
+	}
+}
+
+func BenchmarkFunction(b *testing.B) {
+	benchmarkLindenmayer(b, lindenmayer)
+}
+
+func BenchmarkChannel(b *testing.B) {
+	benchmarkLindenmayer(b, coliner)
+}
+
+func benchmarkLindenmayer(b *testing.B, f func([]string, map[string][]string, int) []string) {
+	rules := map[string][]string{
+		"A": {"A", "B"},
+		"B": {"A"},
+	}
+	start := []string{"A"}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		f(start, rules, 10)
 	}
 }

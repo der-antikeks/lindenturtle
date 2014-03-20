@@ -14,7 +14,7 @@ import (
 func main() {
 	segmentlength := 4.0
 
-	green := color.RGBA{0x99, 0xFF, 0x33, 0xFF}
+	green := color.RGBA{0x60, 0xFF, 0x00, 0xFF}
 
 	path := lindenmayer([]string{"X"}, map[string][]string{
 		"X": {"F", "-", "[", "[", "X", "]", "+", "X", "]", "+", "F", "[", "+", "F", "X", "]", "-", "X"},
