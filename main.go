@@ -7,50 +7,50 @@ import (
 	"image/color"
 	"image/png"
 	"log"
+	"math/rand"
 	"os"
 )
 
 func main() {
-	segmentlenght := 1.0
+	segmentlength := 4.0
 
-	green := color.RGBA{0x33, 0xFF, 0x33, 0xFF}
-	black := color.RGBA{0x00, 0x00, 0x00, 0xFF}
+	green := color.RGBA{0x99, 0xFF, 0x33, 0xFF}
 
-	path := lindenmayer([]string{"0"}, map[string][]string{
-		"1": {"1", "1"},
-		"0": {"1", "[", "0", "]", "0"},
-	}, 8)
+	path := lindenmayer([]string{"X"}, map[string][]string{
+		"X": {"F", "-", "[", "[", "X", "]", "+", "X", "]", "+", "F", "[", "+", "F", "X", "]", "-", "X"},
+		"F": {"F", "F"},
+	}, 7)
 
 	turtle := NewTurtle(map[string]func(*Turtle){
-		"0": func(t *Turtle) {
-			// draw a line segment ending in a leaf
-			t.SetColor(green)
-			t.SetWidth(5)
-			t.Draw(segmentlenght, 0)
+		"F": func(t *Turtle) {
+			// draw forward
+			t.Draw(segmentlength*rand.Float64(), 0)
 		},
-		"1": func(t *Turtle) {
-			// draw a line segment
-			t.SetColor(black)
-			t.SetWidth(1)
-			t.Draw(segmentlenght, 0)
+		"-": func(t *Turtle) {
+			// turn left 25°
+			t.Turn(-20 + rand.Float64()*10)
+		},
+		"+": func(t *Turtle) {
+			// turn right 25°
+			t.Turn(20 + rand.Float64()*10)
 		},
 		"[": func(t *Turtle) {
-			// push position and angle, turn left 45 degrees
+			// push position and angle
 			t.Save()
-			t.Turn(-45)
 		},
 		"]": func(t *Turtle) {
-			// pop position and angle, turn right 45 degrees
+			// pop position and angle
 			t.Restore()
-			t.Turn(45)
 		},
 	})
 
+	turtle.SetColor(green)
+	turtle.SetWidth(1)
 	turtle.Turn(-90)
 
 	img := turtle.Go(path)
 
-	saveToPngFile("images/tree.png", img)
+	saveToPngFile("images/plant.png", img)
 }
 
 func saveToPngFile(filePath string, m image.Image) {
