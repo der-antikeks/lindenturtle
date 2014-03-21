@@ -123,9 +123,19 @@ func (t *Turtle) Draw(f, r float64) {
 	})
 }
 
-// change direction
+// get position
+func (t *Turtle) Position() (x, y float64) {
+	return t.cur.x, t.cur.y
+}
+
+// add rotation
 func (t *Turtle) Turn(degree float64) {
 	t.cur.a += (degree * (math.Pi / 180.0))
+}
+
+// get angle
+func (t *Turtle) Angle() (degree float64) {
+	return t.cur.a * (180.0 / math.Pi)
 }
 
 // set color
@@ -133,9 +143,19 @@ func (t *Turtle) SetColor(c color.Color) {
 	t.cur.color = c
 }
 
+// get color
+func (t *Turtle) Color() color.Color {
+	return t.cur.color
+}
+
 // set width
 func (t *Turtle) SetWidth(w float64) {
 	t.cur.width = w
+}
+
+// get width
+func (t *Turtle) Width() float64 {
+	return t.cur.width
 }
 
 // UNLEASH THE TURTLE!
