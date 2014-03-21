@@ -15,6 +15,28 @@ func main() {
 	saveToPngFile("images/bintree.png", bintree(8))
 	saveToPngFile("images/plant.png", plant(7))
 	saveToPngFile("images/tree.png", tree(9))
+	saveToPngFile("images/hilbert.png", hilbert(5))
+}
+
+func hilbert(it int) image.Image {
+	path := lindenmayer([]string{"A"}, map[string][]string{
+		"A": {"-", "B", "F", "+", "A", "F", "A", "+", "F", "B", "-"},
+		"B": {"+", "A", "F", "-", "B", "F", "B", "-", "F", "A", "+"},
+	}, it)
+
+	turtle := NewTurtle(map[string]func(*Turtle){
+		"F": func(t *Turtle) {
+			t.Draw(5.0, 0)
+		},
+		"-": func(t *Turtle) {
+			t.Turn(-90)
+		},
+		"+": func(t *Turtle) {
+			t.Turn(90)
+		},
+	})
+
+	return turtle.Go(path)
 }
 
 func tree(it int) image.Image {
